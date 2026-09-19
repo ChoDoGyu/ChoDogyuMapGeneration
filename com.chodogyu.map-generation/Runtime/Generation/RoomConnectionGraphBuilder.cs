@@ -42,6 +42,64 @@ namespace CDG.MapGeneration
             }
 
             IReadOnlyList<RoomConnection> candidates = CreateSortedCandidates(rooms);
+            return BuildMinimumSpanningTree(rooms, candidates);
+        }
+
+        internal static IReadOnlyList<RoomConnection> BuildConnections(IReadOnlyList<MapRoom> rooms, int extraConnectionCount)
+        {
+            ValidateRooms(rooms);
+
+            if (extraConnectionCount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(extraConnectionCount), extraConnectionCount,
+                    "Extra Connection Count는 음수일 수 없습니다.");
+            }
+
+            int maximumExtraConnectionCount = CalculateMaximumExtraConnectionCount(rooms.Count);
+
+            if (extraConnectionCount > maximumExtraConnectionCount)
+            {
+                throw new ArgumentOutOfRangeException(nameof(extraConnectionCount), extraConnectionCount,
+                    $"Extra Connection Count가 가능한 최대 추가 연결 수를 초과했습니다. Maximum: {maximumExtraConnectionCount}");
+            }
+
+            if (rooms.Count <= 1)
+            {
+                return Array.Empty<RoomConnection>();
+            }
+
+            IReadOnlyList<RoomConnection> candidates = CreateSortedCandidates(rooms);
+            IReadOnlyList<RoomConnection> minimumSpanningTree = BuildMinimumSpanningTree(rooms, candidates);
+            List<RoomConnection> connections = new List<RoomConnection>(minimumSpanningTree.Count + extraConnectionCount);
+            HashSet<long> connectedPairs = new HashSet<long>();
+
+            for (int i = 0; i < minimumSpanningTree.Count; i++)
+            {
+                RoomConnection connection = minimumSpanningTree[i];
+                connections.Add(connection);
+                connectedPairs.Add(CreateConnectionKey(connection.FromRoomId, connection.ToRoomId));
+            }
+
+            for (int i = 0; i < candidates.Count && connections.Count < minimumSpanningTree.Count + extraConnectionCount; i++)
+            {
+                RoomConnection candidate = candidates[i];
+                long key = CreateConnectionKey(candidate.FromRoomId, candidate.ToRoomId);
+
+                if (connectedPairs.Contains(key))
+                {
+                    continue;
+                }
+
+                connections.Add(candidate);
+                connectedPairs.Add(key);
+            }
+
+            return connections.AsReadOnly();
+        }
+
+        private static IReadOnlyList<RoomConnection> BuildMinimumSpanningTree(IReadOnlyList<MapRoom> rooms,
+            IReadOnlyList<RoomConnection> candidates)
+        {
             Dictionary<int, int> roomIndices = CreateRoomIndexLookup(rooms);
             DisjointSet disjointSet = new DisjointSet(rooms.Count);
             List<RoomConnection> connections = new List<RoomConnection>(rooms.Count - 1);
@@ -78,6 +136,28 @@ namespace CDG.MapGeneration
             }
 
             return lookup;
+        }
+
+        private static int CalculateMaximumExtraConnectionCount(int roomCount)
+        {
+            if (roomCount <= 2)
+            {
+                return 0;
+            }
+
+            long maximum = (long)(roomCount - 1) * (roomCount - 2) / 2L;
+
+            if (maximum > int.MaxValue)
+            {
+                return int.MaxValue;
+            }
+
+            return (int)maximum;
+        }
+
+        private static long CreateConnectionKey(int fromRoomId, int toRoomId)
+        {
+            return ((long)fromRoomId << 32) | (uint)toRoomId;
         }
 
         private static long CalculateDistanceSquared(Vector2Int first, Vector2Int second)
