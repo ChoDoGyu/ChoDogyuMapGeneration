@@ -1,0 +1,17 @@
+﻿{
+  "name": "CDG.MapGeneration.Samples.BasicUsage",
+  "rootNamespace": "CDG.MapGeneration.Samples.BasicUsage",
+  "references": [
+    "CDG.MapGeneration",
+    "CDG.Core"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
