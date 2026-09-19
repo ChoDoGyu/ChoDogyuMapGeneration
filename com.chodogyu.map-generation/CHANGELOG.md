@@ -1,0 +1,107 @@
+﻿# Changelog
+
+이 문서는 ChoDogyu Procedural Map Generation Framework의 주요 변경 사항을 기록합니다.
+
+## [1.0.0] - 2026-09-19
+
+### Added
+
+- `MapGenerationSettings` 기반 맵 생성 설정
+- 기본 64 x 64 Room + Corridor 생성 설정
+- Generation Settings Validation
+- 안정적인 `MAP_INVALID_SETTINGS` 오류 코드
+- Seed 기반 결정적 맵 생성
+- UnityEngine.Random 전역 상태와 분리된 내부 결정적 Random
+- 0 및 음수 Seed 지원
+- 새로운 Seed 생성을 위한 `MapSeedUtility`
+- Room 개수 및 Min / Max Size 설정
+- Room Padding 설정
+- Edge Padding 설정
+- Room별 최대 배치 시도 횟수 설정
+- 제한된 시도 내 Room 배치 실패 처리
+- 안정적인 `MAP_ROOM_PLACEMENT_FAILED` 오류 코드
+- 전체 Room 후보 Connection 생성
+- 거리 및 Room ID 기반 결정적 Connection 정렬
+- Disjoint Set 기반 연결 상태 관리
+- Kruskal MST 기반 전체 Room 연결
+- Extra Connection을 통한 순환 경로 구성
+- Room 중심 기반 직교 L자형 Corridor 생성
+- Corridor Cell 순서 및 연속 경로 구성
+- Room 및 Corridor 기반 Floor Cell 구성
+- Floor 주변 Wall Cell 구성
+- Empty / Floor / Wall `MapCellType`
+- `MapData` 기반 논리적 생성 결과
+- `MapRoom` 데이터 모델
+- `MapCorridor` 데이터 모델
+- Grid Bounds 검사
+- Cell 좌표 조회
+- Room 및 Corridor 읽기 전용 데이터 제공
+- 동일 설정 및 Seed 결과 재현성 보장
+- `MapValidator` 기반 생성 결과 Validation
+- `MapValidationReport`
+- `MapValidationIssue`
+- `MapValidationSeverity`
+- 안정적인 Map Validation Issue Code
+- Cell Type Validation
+- Room null 및 ID 중복 Validation
+- Room Bounds Validation
+- Room Center Floor Validation
+- Corridor null 및 Room 참조 Validation
+- Corridor Bounds Validation
+- Corridor Floor Cell Validation
+- Corridor 연속성 Validation
+- Corridor Endpoint Validation
+- Room Graph 연결성 Validation
+- Floor Cell 연결성 Validation
+- `PrefabMapTheme` 기반 Floor / Wall Prefab 설정
+- `PrefabMapVisualizer` 기반 Scene Visualization
+- XY Projection
+- XZ Projection
+- Cell Size 설정
+- 기존 Visualization 자동 교체
+- Visualization Clear
+- 안정적인 Visualization 오류 코드
+- `MAP_VISUALIZER_INVALID_DATA`
+- `MAP_VISUALIZER_THEME_MISSING`
+- `MAP_VISUALIZER_INVALID_THEME`
+- Map Generation Editor Window
+- Generation Settings Editor 입력
+- 기본 설정 Reset
+- Seed 직접 입력 및 Randomize
+- Generate
+- Regenerate
+- Validate
+- Clear
+- 생성 결과 Summary
+- Floor / Wall / Empty Cell Count 표시
+- Validation 상태 표시
+- 논리적 2D Grid Preview
+- Scene Visualizer 선택
+- Apply to Scene
+- Clear Scene
+- Scene 변경 Dirty 처리
+- Runtime 테스트 구성
+- Editor 테스트 구성
+- 설정 Validation 테스트
+- Room Placement 테스트
+- Room Connection Graph 테스트
+- Extra Connection 테스트
+- Corridor Generation 테스트
+- Cell Construction 테스트
+- 통합 Generation 테스트
+- 다중 Seed 안정성 테스트
+- 동일 Seed 재현성 테스트
+- UnityEngine.Random 전역 상태 비변경 테스트
+- Map Validation 테스트
+- Prefab Visualization 테스트
+- Editor Scene Apply 테스트
+- Basic Usage Sample
+  - 기본 Seed 맵 생성
+  - 동일 Seed 재생성
+  - Random Seed 생성
+  - Map Validation
+  - Prefab 기반 Scene Visualization
+  - Visualization Clear
+- Unity Package Manager용 UPM 패키지 구조
+- 패키지 README
+- 상세 Documentation
