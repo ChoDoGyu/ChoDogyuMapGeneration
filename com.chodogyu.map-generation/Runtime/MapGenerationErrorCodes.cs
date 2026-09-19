@@ -10,5 +10,10 @@
         /// 맵 생성 설정에 유효하지 않은 값이 포함되어 있을 때 사용하는 오류 코드입니다.
         /// </summary>
         public const string InvalidSettings = "MAP_INVALID_SETTINGS";
+
+        /// <summary>
+        /// 제한된 배치 시도 횟수 안에 요청한 방을 모두 배치하지 못했을 때 사용하는 오류 코드입니다.
+        /// </summary>
+        public const string RoomPlacementFailed = "MAP_ROOM_PLACEMENT_FAILED";
     }
 }
