@@ -6,6 +6,7 @@ namespace CDG.MapGeneration.Editor
 {
     /// <summary>
     /// Room + Corridor 맵의 생성 설정과 Seed를 입력하고 생성 결과와 논리적 Grid Preview를 확인할 수 있는 Editor Window입니다.
+    /// 생성된 MapData는 PrefabMapVisualizer를 통해 Scene에 적용할 수 있습니다.
     /// </summary>
     public sealed class MapGenerationEditorWindow : EditorWindow
     {
@@ -28,6 +29,7 @@ namespace CDG.MapGeneration.Editor
         [SerializeField] private int maxPlacementAttemptsPerRoom;
         [SerializeField] private int extraConnectionCount;
         [SerializeField] private int seed;
+        [SerializeField] private PrefabMapVisualizer sceneVisualizer;
 
         private MapData currentMapData;
         private MapValidationReport currentValidation;
@@ -69,6 +71,9 @@ namespace CDG.MapGeneration.Editor
             EditorGUILayout.Space(8f);
 
             DrawActions();
+            EditorGUILayout.Space(8f);
+
+            DrawSceneVisualization();
             EditorGUILayout.Space(8f);
 
             DrawStatus();
@@ -164,6 +169,36 @@ namespace CDG.MapGeneration.Editor
             if (GUILayout.Button("Clear"))
             {
                 ClearCurrentMap();
+            }
+
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        private void DrawSceneVisualization()
+        {
+            EditorGUILayout.LabelField("Scene Visualization", EditorStyles.boldLabel);
+
+            sceneVisualizer = (PrefabMapVisualizer)EditorGUILayout.ObjectField(
+                "Scene Visualizer", sceneVisualizer, typeof(PrefabMapVisualizer), true);
+
+            EditorGUILayout.BeginHorizontal();
+
+            EditorGUI.BeginDisabledGroup(currentMapData == null || sceneVisualizer == null);
+
+            if (GUILayout.Button("Apply to Scene"))
+            {
+                ApplyCurrentMapToScene();
+            }
+
+            EditorGUI.EndDisabledGroup();
+
+            EditorGUI.BeginDisabledGroup(sceneVisualizer == null);
+
+            if (GUILayout.Button("Clear Scene"))
+            {
+                ClearSceneVisualization();
             }
 
             EditorGUI.EndDisabledGroup();
@@ -329,6 +364,35 @@ namespace CDG.MapGeneration.Editor
             currentMapData = null;
             currentValidation = null;
             SetStatus("현재 생성된 MapData를 제거했습니다.", MessageType.Info);
+        }
+
+        private void ApplyCurrentMapToScene()
+        {
+            if (currentMapData == null || sceneVisualizer == null)
+            {
+                return;
+            }
+
+            Result result = MapSceneApplyUtility.Apply(sceneVisualizer, currentMapData);
+
+            if (result.IsFailure)
+            {
+                SetStatus($"{result.Error.Code}\n{result.Error.Message}", MessageType.Error);
+                return;
+            }
+
+            SetStatus($"Scene 적용 완료 - Visualizer: {sceneVisualizer.name}", MessageType.Info);
+        }
+
+        private void ClearSceneVisualization()
+        {
+            if (sceneVisualizer == null)
+            {
+                return;
+            }
+
+            MapSceneApplyUtility.Clear(sceneVisualizer);
+            SetStatus($"Scene Visualization 제거 완료 - Visualizer: {sceneVisualizer.name}", MessageType.Info);
         }
 
         private MapGenerationSettings CreateSettings()
