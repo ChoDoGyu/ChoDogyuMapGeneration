@@ -1,0 +1,14 @@
+﻿namespace CDG.MapGeneration
+{
+    /// <summary>
+    /// Map Generation Framework에서 사용하는 안정적인 오류 코드 모음입니다.
+    /// 외부 코드에서는 오류 메시지보다 오류 코드를 기준으로 실패 원인을 구분할 수 있습니다.
+    /// </summary>
+    public static class MapGenerationErrorCodes
+    {
+        /// <summary>
+        /// 맵 생성 설정에 유효하지 않은 값이 포함되어 있을 때 사용하는 오류 코드입니다.
+        /// </summary>
+        public const string InvalidSettings = "MAP_INVALID_SETTINGS";
+    }
+}
