@@ -8,7 +8,7 @@
       "hash": "aeec0a4de7eb2b0878dfa8d6ded969422884b667"
     },
     "com.chodogyu.map-generation": {
-      "version": "file:C:/Users/USER/Documents/GitHub/ChoDogyuMapGeneration/com.chodogyu.map-generation",
+      "version": "file:../../com.chodogyu.map-generation",
       "depth": 0,
       "source": "local",
       "dependencies": {}
