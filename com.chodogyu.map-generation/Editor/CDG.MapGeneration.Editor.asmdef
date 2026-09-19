@@ -1,0 +1,19 @@
+﻿{
+  "name": "CDG.MapGeneration.Editor",
+  "rootNamespace": "CDG.MapGeneration.Editor",
+  "references": [
+    "CDG.MapGeneration",
+    "CDG.Core"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

@@ -1,0 +1,22 @@
+﻿{
+  "name": "CDG.MapGeneration.Tests.Runtime",
+  "rootNamespace": "CDG.MapGeneration.Tests.Runtime",
+  "references": [
+    "CDG.MapGeneration",
+    "CDG.Core"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ]
+}

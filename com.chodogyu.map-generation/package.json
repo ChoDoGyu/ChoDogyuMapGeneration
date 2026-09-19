@@ -1,0 +1,17 @@
+﻿{
+  "name": "com.chodogyu.map-generation",
+  "version": "1.0.0",
+  "displayName": "ChoDogyu Procedural Map Generation",
+  "description": "규칙과 Seed를 기반으로 재현 가능한 방과 복도 구조의 맵 데이터를 생성하고 검증 및 시각화할 수 있도록 지원하는 범용 Unity Procedural Map Generation Framework입니다.",
+  "unity": "6000.3",
+  "keywords": [
+    "procedural",
+    "map",
+    "generation",
+    "dungeon",
+    "framework"
+  ],
+  "author": {
+    "name": "ChoDogyu"
+  }
+}
