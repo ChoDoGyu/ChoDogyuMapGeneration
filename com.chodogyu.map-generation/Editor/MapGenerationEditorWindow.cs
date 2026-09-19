@@ -5,11 +5,18 @@ using UnityEngine;
 namespace CDG.MapGeneration.Editor
 {
     /// <summary>
-    /// Room + Corridor 맵의 생성 설정과 Seed를 입력하고 생성 결과를 확인할 수 있는 Editor Window입니다.
-    /// Preview와 Scene 적용 기능은 별도 기능으로 확장됩니다.
+    /// Room + Corridor 맵의 생성 설정과 Seed를 입력하고 생성 결과와 논리적 Grid Preview를 확인할 수 있는 Editor Window입니다.
     /// </summary>
     public sealed class MapGenerationEditorWindow : EditorWindow
     {
+        private const float PreviewHeight = 360f;
+        private const float PreviewPadding = 8f;
+
+        private static readonly Color PreviewBackgroundColor = new Color(0.12f, 0.12f, 0.12f);
+        private static readonly Color EmptyColor = new Color(0.16f, 0.16f, 0.16f);
+        private static readonly Color FloorColor = new Color(0.78f, 0.78f, 0.78f);
+        private static readonly Color WallColor = new Color(0.35f, 0.35f, 0.35f);
+
         [SerializeField] private bool initialized;
         [SerializeField] private int width;
         [SerializeField] private int height;
@@ -32,7 +39,7 @@ namespace CDG.MapGeneration.Editor
         private static void OpenWindow()
         {
             MapGenerationEditorWindow window = GetWindow<MapGenerationEditorWindow>("Map Generator");
-            window.minSize = new Vector2(420f, 560f);
+            window.minSize = new Vector2(420f, 640f);
             window.Show();
         }
 
@@ -66,6 +73,12 @@ namespace CDG.MapGeneration.Editor
 
             DrawStatus();
             DrawSummary();
+
+            if (currentMapData != null)
+            {
+                EditorGUILayout.Space(10f);
+                DrawPreview();
+            }
 
             EditorGUILayout.EndScrollView();
         }
@@ -194,6 +207,72 @@ namespace CDG.MapGeneration.Editor
                 EditorGUILayout.LabelField("Validation", currentValidation.IsValid ? "Valid" : "Invalid");
                 EditorGUILayout.LabelField("Errors", currentValidation.ErrorCount.ToString());
                 EditorGUILayout.LabelField("Warnings", currentValidation.WarningCount.ToString());
+            }
+        }
+
+        private void DrawPreview()
+        {
+            EditorGUILayout.LabelField("Map Preview", EditorStyles.boldLabel);
+
+            Rect previewRect = GUILayoutUtility.GetRect(
+                100f, PreviewHeight, GUILayout.ExpandWidth(true), GUILayout.Height(PreviewHeight));
+
+            EditorGUI.DrawRect(previewRect, PreviewBackgroundColor);
+
+            Rect contentRect = new Rect(
+                previewRect.x + PreviewPadding,
+                previewRect.y + PreviewPadding,
+                previewRect.width - PreviewPadding * 2f,
+                previewRect.height - PreviewPadding * 2f);
+
+            Rect mapRect = CalculateMapRect(contentRect);
+
+            for (int y = 0; y < currentMapData.Height; y++)
+            {
+                for (int x = 0; x < currentMapData.Width; x++)
+                {
+                    DrawPreviewCell(mapRect, x, y);
+                }
+            }
+        }
+
+        private Rect CalculateMapRect(Rect availableRect)
+        {
+            float cellWidth = availableRect.width / currentMapData.Width;
+            float cellHeight = availableRect.height / currentMapData.Height;
+            float cellSize = Mathf.Min(cellWidth, cellHeight);
+
+            float mapWidth = currentMapData.Width * cellSize;
+            float mapHeight = currentMapData.Height * cellSize;
+            float x = availableRect.x + (availableRect.width - mapWidth) * 0.5f;
+            float y = availableRect.y + (availableRect.height - mapHeight) * 0.5f;
+
+            return new Rect(x, y, mapWidth, mapHeight);
+        }
+
+        private void DrawPreviewCell(Rect mapRect, int x, int y)
+        {
+            float cellWidth = mapRect.width / currentMapData.Width;
+            float cellHeight = mapRect.height / currentMapData.Height;
+            float drawX = mapRect.x + x * cellWidth;
+            float drawY = mapRect.yMax - (y + 1) * cellHeight;
+
+            Rect cellRect = new Rect(drawX, drawY, cellWidth, cellHeight);
+            EditorGUI.DrawRect(cellRect, GetCellColor(currentMapData.GetCell(x, y)));
+        }
+
+        private static Color GetCellColor(MapCellType cellType)
+        {
+            switch (cellType)
+            {
+                case MapCellType.Floor:
+                    return FloorColor;
+
+                case MapCellType.Wall:
+                    return WallColor;
+
+                default:
+                    return EmptyColor;
             }
         }
 
