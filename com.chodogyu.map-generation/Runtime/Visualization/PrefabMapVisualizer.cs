@@ -109,7 +109,7 @@ namespace CDG.MapGeneration
 
         /// <summary>
         /// 이 Visualizer가 생성한 Scene 표현을 제거합니다.
-        /// MapData에는 영향을 주지 않습니다.
+        /// Play Mode에서도 호출 즉시 Visualizer Hierarchy에서 분리됩니다.
         /// </summary>
         public void Clear()
         {
@@ -128,6 +128,8 @@ namespace CDG.MapGeneration
 
             if (Application.isPlaying)
             {
+                target.SetActive(false);
+                target.transform.SetParent(null);
                 Destroy(target);
             }
             else
